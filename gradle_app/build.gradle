@@ -16,7 +16,7 @@ dependencies {
     testImplementation "junit:junit:4.12"
 }
 
-jar {
+war {
     archiveBaseName = 'gs-gradle'
     archiveVersion =  '0.1.0'
 }
