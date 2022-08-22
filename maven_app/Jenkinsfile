@@ -18,12 +18,14 @@ node ("node02"){
     }
 
     stage ('Build') {
-      dir ("maven_app"){
+      dir ('maven_app'){
         sh 'mvn clean install'
       }
     }
 
     stage ('Deply to server') {
-      dir ('maven_app')
+      dir ('maven_app') {
+        sh 'echo "Here should be deploy"'
+      }
     }
 }
