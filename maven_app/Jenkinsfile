@@ -1,0 +1,36 @@
+node ("maven"){
+
+    stage ('Get source code') {
+        git branch: "${branch}", credentialsId: '21d4d238-46ac-4300-a7a7-b5ad76d3b839', url: 'https://github.com/sslbacyhadls/ipr'
+    }
+
+    stage ('Preparation') {
+      dir('demoRest') {
+        env.APP_VER = sh( script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
+        sh "echo ${env.APP_VER}"
+      }
+    }
+
+    stage ('Maven test'){
+      dir('demoRest') {
+        sh 'mvn test'
+      }
+    }
+
+    stage ('Build') {
+      dir ("demoRest"){
+        sh 'mvn clean install'
+      }
+    }
+
+    stage ('Deply to server') {
+      withCredentials([vaultString(credentialsId: '4caffe34-3904-4533-94d5-c2cc607da882', variable: 'ssh_secret')]) {
+        dir ("demoRest"){
+          sh "sshpass -p \"$ssh_secret\" scp -oStrictHostKeyChecking=no target/demoRest-${env.APP_VER}.war ssh_user@${deploy_server}:/tmp/"
+          sh "sshpass -p \"$ssh_secret\" ssh -t ssh_user@${deploy_server}  \"sudo mv /tmp/demoRest-${env.APP_VER}.war /usr/local/tomcat/webapps/demoRest.war\""
+          sh "sshpass -p \"$ssh_secret\" ssh -t ssh_user@${deploy_server}  \"sudo JAVA_HOME=/usr/local/openjdk-11 /usr/local/tomcat/bin/shutdown.sh\""
+          sh "sshpass -p \"$ssh_secret\" ssh -t ssh_user@${deploy_server}  \"sudo JAVA_HOME=/usr/local/openjdk-11 /usr/local/tomcat/bin/startup.sh\""
+        }
+      }
+    }
+}
