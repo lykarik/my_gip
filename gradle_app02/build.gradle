@@ -23,7 +23,6 @@ dependencies {
          tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
          "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
          "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
-         api 'org.apache.commons:commons-math3:3.6.1'
 }
 
 
