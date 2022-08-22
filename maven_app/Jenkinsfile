@@ -23,7 +23,7 @@ node ("node02"){
       }
     }
 
-    stage ('Deply to server') {
+    stage ('Deploy to server') {
       dir ('maven_app') {
         sh 'echo "Here should be deploy"'
       }
