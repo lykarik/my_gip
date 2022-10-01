@@ -1,0 +1,46 @@
+node ("maven"){
+
+  try{
+    pipeline()
+  } catch (e) {
+    failed(e)
+  }
+}
+
+def pipeline(){
+    stage ('Get source code') {
+        git branch: "${branch}", credentialsId: '21d4d238-46ac-4300-a7a7-b5ad76d3b839', url: 'https://github.com/sslbacyhadls/ipr'
+    }
+
+    stage ('Preparation') {
+      dir('demoRest') {
+        env.APP_VER = sh( script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
+        sh "echo ${env.APP_VER}"
+      }
+    }
+
+    stage ('Maven test'){
+      dir('demoRest') {
+        sh 'mvn test'
+      }
+    }
+
+    stage ('Build') {
+      dir ("demoRest"){
+        sh 'mvn clean install'
+      }
+    }
+
+    stage ('Archive artifacts'){
+      archiveArtifacts artifacts: 'demoRest/target/demoRest-*.war', followSymlinks: false, onlyIfSuccessful: true
+    }
+}
+
+
+def failed (e) {
+      stage("Fail email") {
+        mail to: 'shlemov@gmail.com',
+            subject: "Pipeline failed: ${currentBuild.fullDisplayName}",
+            body: "Error in ${env.BUILD_URL} $e"
+      }
+}
