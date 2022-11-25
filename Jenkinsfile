@@ -1,3 +1,3 @@
 some_txt
 
-with another text = 4
+with another text = 0
