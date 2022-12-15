@@ -83,17 +83,19 @@ pipeline {
                 }
             }
         }
-    }
-    stage('Clean') {
-        when {
-            expression { return params.clean }
-        }
-        steps {
-            script { 
-               clean(env.STAND_NAME)
+
+        stage('Clean') {
+            when {
+                expression { return params.clean }
+            }
+            steps {
+                script { 
+                    clean(env.STAND_NAME)
+                }
             }
         }
-    }    
+    }
+        
     post {
         success {
 //            telegram("😀 SUCCESSFUL", true)
