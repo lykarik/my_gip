@@ -5,11 +5,11 @@ pipeline {
         parallelsAlwaysFailFast()
     }
     parameters {
-        choice (name: 'STAND_NAME', choices: '0000000\n1111111\n2222222\n33333', description: 'variants')
-//        string (name: 'STAND_NAME_PARA',defaultValue: 'fjboss01',description: 'STAND_NAME')
-        string (name: 'JOB_NAME',defaultValue: 'undefine',description: 'JOB_NAME')
-        string (name: 'JOB_CRON', defaultValue: '0 0/30 * * * ?',description: 'JOB_CRON')
-        string (name: 'JOB_STATUS', defaultValue: 'A',description: 'JOB_STATUS')
+        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
+        booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
+        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
+        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
     }
     environment {
         LOGIN = "admin"
