@@ -31,9 +31,7 @@ pipeline {
         parallelsAlwaysFailFast()
     }
     parameters {
-//        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
-//        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
-        booleanParam(name: 'test.gkhcontent.ru:', defaultValue: false, description: 'Toggle this value')
+        booleanParam(name: 'test.gkhcontent.ru', defaultValue: false, description: 'Toggle this value')
         booleanParam(name: 'nit.dom.test.gosuslugi.ru(>X<)', defaultValue: false, description: 'Toggle this value')
         booleanParam(name: 'gkhcontent.ru', defaultValue: false, description: 'Toggle this value')
         booleanParam(name: 'vtc.dom.test.gosuslugi.ru', defaultValue: false, description: 'Toggle this value')
@@ -50,9 +48,8 @@ pipeline {
         booleanParam(name: 'sreda.ft01.dom.test.gosuslugi.ru', defaultValue: false, description: 'Toggle this value')
         booleanParam(name: 'ssp.dom.test.gosuslugi.ru', defaultValue: false, description: 'Toggle this value')
         booleanParam(name: 'vtc-esia & nt-esia', defaultValue: false, description: 'Toggle this value')
-
-        
-
+//        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+//        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
 //        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
 //        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
     }
@@ -84,14 +81,12 @@ pipeline {
             }
         }
 
-        stage('Clean') {
+        stage('test.gkhcontent.ru') {
             when {
-                expression { return params.clean }
+                expression { return params.test.gkhcontent.ru }
             }
             steps {
-                script { 
-                    clean(env.STAND_NAME)
-                }
+                echo "test.gkhcontent.ru"
             }
         }
     }
