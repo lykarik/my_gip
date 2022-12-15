@@ -31,23 +31,23 @@ pipeline {
         parallelsAlwaysFailFast()
     }
     parameters {
-        booleanParam(name: 'test.gkhcontent.ru', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'nit.dom.test.gosuslugi.ru(>X<)', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'gkhcontent.ru', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'vtc.dom.test.gosuslugi.ru', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'mob.hcs.lanit.ru', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'Обновление idp.jks для сервиса idp', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'Обновление jira.keystore', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'mail.dom.test.gosuslugi.ru(>X<)', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'update certs mail.dom.test.gosuslugi.ru', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'sit0[1-2].dom.test.gosuslugi.ru', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'nt01.dom.test.gosuslugi.ru', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'kpak.dom.test.gosuslugi.ru', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'ft01.dom.test.gosuslugi.ru', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'sreda.vtc.dom.test.gosuslugi.ru', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'sreda.ft01.dom.test.gosuslugi.ru', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'ssp.dom.test.gosuslugi.ru', defaultValue: false, description: 'Toggle this value')
-        booleanParam(name: 'vtc-esia & nt-esia', defaultValue: false, description: 'Toggle this value')
+        booleanParam(name: 'test_gkhcontent', defaultValue: false, description: 'test.gkhcontent.ru')
+        booleanParam(name: 'nit', defaultValue: false, description: 'nit.dom.test.gosuslugi.ru(>X<)')
+        booleanParam(name: 'gkhcontent', defaultValue: false, description: 'gkhcontent.ru')
+        booleanParam(name: 'vtc', defaultValue: false, description: 'vtc.dom.test.gosuslugi.ru')
+        booleanParam(name: 'mob_hcs', defaultValue: false, description: 'mob.hcs.lanit.ru')
+        booleanParam(name: 'idp_jks_update', defaultValue: false, description: 'Обновление idp.jks для сервиса idp')
+        booleanParam(name: 'jira_keystore_update', defaultValue: false, description: 'Обновление jira.keystore')
+        booleanParam(name: 'mail', defaultValue: false, description: 'mail.dom.test.gosuslugi.ru(>X<)')
+        booleanParam(name: 'update_certs_mail', defaultValue: false, description: 'update certs mail.dom.test.gosuslugi.ru')
+        booleanParam(name: 'sit', defaultValue: false, description: 'sit0[1-2].dom.test.gosuslugi.ru')
+        booleanParam(name: 'nt01', defaultValue: false, description: 'nt01.dom.test.gosuslugi.ru')
+        booleanParam(name: 'kpak', defaultValue: false, description: 'kpak.dom.test.gosuslugi.ru')
+        booleanParam(name: 'ft01', defaultValue: false, description: 'ft01.dom.test.gosuslugi.ru')
+        booleanParam(name: 'sreda_vtc', defaultValue: false, description: 'sreda.vtc.dom.test.gosuslugi.ru')
+        booleanParam(name: 'sreda_ft01', defaultValue: false, description: 'sreda.ft01.dom.test.gosuslugi.ru')
+        booleanParam(name: 'ssp', defaultValue: false, description: 'ssp.dom.test.gosuslugi.ru')
+        booleanParam(name: 'vtc-esia_nt-esia', defaultValue: false, description: 'vtc-esia & nt-esia')
 //        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
 //        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
 //        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
@@ -84,7 +84,7 @@ pipeline {
 
         stage('test.gkhcontent.ru') {
             when {
-                expression { return params.test.gkhcontent.ru }
+                expression { return params.test_gkhcontent }
             }
             steps {
                 echo "test.gkhcontent.ru"
