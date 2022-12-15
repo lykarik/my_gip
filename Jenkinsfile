@@ -59,34 +59,34 @@ pipeline {
         ANSIBLE_HOST_KEY_CHECKING = 'false'
         ANSIBLE_STRATEGY = 'free'
     }
-    stages {
-        stage('Git checkout on master') {
-        agent {label 'master'}
-            steps {
-                dir("${WS_MASTER}") {
-                    checkout([$class: 'GitSCM',
-                            branches: [[name: ""]],
-                            doGenerateSubmoduleConfigurations: false,
-                            extensions: [
-                                [$class: 'SubmoduleOption', shallow: true, depth: "1", parentCredentials: true],
-                                [$class: 'GitLFSPull'],
-                                [$class: 'CloneOption', reference: "", shallow: true, depth: "1"],
-                                [$class: 'RelativeTargetDirectory', relativeTargetDir: ""],
-                            ],
-                            gitTool: 'Default',
-                            submoduleCfg: [],
-                            userRemoteConfigs: [[url: '', credentialsId: '']]
-                        ])
-                }
-            }
-        }
+    // stages {
+    //     stage('Git checkout on master') {
+    //     agent {label 'master'}
+    //         steps {
+    //             dir("${WS_MASTER}") {
+    //                 checkout([$class: 'GitSCM',
+    //                         branches: [[name: ""]],
+    //                         doGenerateSubmoduleConfigurations: false,
+    //                         extensions: [
+    //                             [$class: 'SubmoduleOption', shallow: true, depth: "1", parentCredentials: true],
+    //                             [$class: 'GitLFSPull'],
+    //                             [$class: 'CloneOption', reference: "", shallow: true, depth: "1"],
+    //                             [$class: 'RelativeTargetDirectory', relativeTargetDir: ""],
+    //                         ],
+    //                         gitTool: 'Default',
+    //                         submoduleCfg: [],
+    //                         userRemoteConfigs: [[url: '', credentialsId: '']]
+    //                     ])
+    //             }
+    //         }
+    //     }
 
         stage('test.gkhcontent.ru') {
             when {
                 expression { return params.test.gkhcontent.ru }
             }
             steps {
-                echo "test.gkhcontent.ru"
+                echo ""
             }
         }
     }
