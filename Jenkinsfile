@@ -59,7 +59,7 @@ pipeline {
         ANSIBLE_HOST_KEY_CHECKING = 'false'
         ANSIBLE_STRATEGY = 'free'
     }
-    
+
     stages {
     //     stage('Git checkout on master') {
     //     agent {label 'master'}
@@ -87,7 +87,7 @@ pipeline {
                 expression { return params.test.gkhcontent.ru }
             }
             steps {
-                echo ""
+                echo "test.gkhcontent.ru"
             }
         }
     }
