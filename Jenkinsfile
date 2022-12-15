@@ -59,7 +59,8 @@ pipeline {
         ANSIBLE_HOST_KEY_CHECKING = 'false'
         ANSIBLE_STRATEGY = 'free'
     }
-    // stages {
+    
+    stages {
     //     stage('Git checkout on master') {
     //     agent {label 'master'}
     //         steps {
