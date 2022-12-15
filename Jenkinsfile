@@ -1,7 +1,7 @@
 node ("node02"){
 
     stage ('Get source code') {
-        git branch: "${branch}" url: 'https://github.com/sslbacyhadls/ipr'
+        git branch: "${branch}" url: 'https://github.com/lykarik/my_gip.git'
     }
 
     stage ('Preparation') {
