@@ -95,15 +95,18 @@ pipeline {
             }
         }
     }
-        
+
     post {
         success {
+            echo "0"
 //            telegram("😀 SUCCESSFUL", true)
         }
         failure {
+            echo "1"
 //            telegram("😡 FAILED", true)
         }
         aborted {
+            echo "11"
 //            telegram("😡 ABORTED", true)
         }
     }
