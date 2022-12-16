@@ -9,7 +9,7 @@ def telegram(prefix, showDuration) {
        """
 }
 
-def playbook_push_hcs_artifacts (ansible_limit, inventory = '') {
+def playbook_init (ansible_limit, inventory = '') {
     dir("") {
         ansiColor('xterm') {
             ansiblePlaybook(
