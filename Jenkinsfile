@@ -93,10 +93,10 @@ pipeline {
                     url: 'git@github.com:lykarik/my_gip.git'
             }
         }
-        
+
         stage('test.gkhcontent.ru') {
             when {
-                expression { return params.test_gkhcontent }
+                expression { return params.TEST_GKHCONTENT }
             }
             steps {
                 echo "test.gkhcontent.ru"
