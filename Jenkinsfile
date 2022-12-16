@@ -88,7 +88,7 @@ pipeline {
                 echo "test.gkhcontent.ru"
                 echo "${ANSIBLE_BECOME_USER}"
                 echo "${PWD_VAR}"
-                ls -la
+                sh "ls -la"
             }
         }
     }
