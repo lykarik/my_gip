@@ -9,17 +9,17 @@ def telegram(prefix, showDuration) {
        """
 }
 
-def playbook_init (ansible_limit, inventory = '') {
+def playbook_init () {
     dir("") {
         ansiColor('xterm') {
             ansiblePlaybook(
              credentialsId: '',
-             vaultCredentialsId: '',
-             becomeUser: '',
+             vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+             becomeUser: "${ANSIBLE_BECOME_USER}",
              colorized: true,
-             inventory: "",
-             limit: "",
-             playbook: '')
+             limit: 'vtc-gkhcontent',
+             inventory: 'inventories/voshod/test',
+             playbook: 'ansible-common/playbooks/pki-letsencrypt-nginx.yml')
         }
     }
 }
@@ -45,8 +45,8 @@ pipeline {
         booleanParam(name: 'UPDATE_CERTS_MAIL', defaultValue: false, description: 'update certs mail.dom.test.gosuslugi.ru')
 
         booleanParam(name: 'MOB_HCS_LANIT', defaultValue: false, description: 'mob.hcs.lanit.ru')
-        booleanParam(name: 'ESIA_VTC', defaultValue: false, description: 'vtc-esia & nt-esia')
-        booleanParam(name: 'ESIA_NT', defaultValue: false, description: 'vtc-esia & nt-esia')
+        booleanParam(name: 'ESIA_VTC', defaultValue: false, description: 'vtc-esia')
+        booleanParam(name: 'ESIA_NT', defaultValue: false, description: 'nt-esia')
 
         booleanParam(name: 'IDP_JKS_UPDATE', defaultValue: false, description: 'Updating idp.jks for idp service')
         booleanParam(name: 'JIRA_KEYSTORE_UPDATE', defaultValue: false, description: 'Updating jira.keystore')
@@ -85,6 +85,15 @@ pipeline {
     //         }
     //     }
 
+        stage('Git checkout') {
+            steps {
+                git branch: 'update_certs_try', 
+                    changelog: false, 
+                    credentialsId: 'jenkins-master-git-key', 
+                    url: 'git@github.com:lykarik/my_gip.git'
+            }
+        }
+        
         stage('test.gkhcontent.ru') {
             when {
                 expression { return params.test_gkhcontent }
