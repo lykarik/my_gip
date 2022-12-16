@@ -48,16 +48,14 @@ pipeline {
         booleanParam(name: 'sreda_ft01', defaultValue: false, description: 'sreda.ft01.dom.test.gosuslugi.ru')
         booleanParam(name: 'ssp', defaultValue: false, description: 'ssp.dom.test.gosuslugi.ru')
         booleanParam(name: 'vtc-esia_nt-esia', defaultValue: false, description: 'vtc-esia & nt-esia')
-//        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+        
+        string(name: 'ANSIBLE_BECOME_USER', defaultValue: '', description: 'Enter username for Ansible BECOME')
 //        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
 //        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
 //        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
     }
     environment {
-        LOGIN = "admin"
-        HCS_GIT_REFERENCE_ROOT = ''
-        ANSIBLE_HOST_KEY_CHECKING = 'false'
-        ANSIBLE_STRATEGY = 'free'
+        PWD_VAR = WORKSPACE
     }
 
     stages {
@@ -88,6 +86,7 @@ pipeline {
             }
             steps {
                 echo "test.gkhcontent.ru"
+                echo ${PWD_VAR}
             }
         }
     }
