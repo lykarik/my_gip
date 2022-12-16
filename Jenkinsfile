@@ -55,7 +55,7 @@ pipeline {
 //        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
     }
     environment {
-        PWD_VAR = WORKSPACE
+        PWD_VAR = "${WORKSPACE}"
     }
 
     stages {
@@ -86,7 +86,7 @@ pipeline {
             }
             steps {
                 echo "test.gkhcontent.ru"
-                echo ${PWD_VAR}
+                echo "${PWD_VAR}"
             }
         }
     }
