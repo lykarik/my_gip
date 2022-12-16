@@ -87,6 +87,7 @@ pipeline {
             steps {
                 echo "test.gkhcontent.ru"
                 echo "${PWD_VAR}"
+                ls -la
             }
         }
     }
