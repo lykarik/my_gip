@@ -28,28 +28,33 @@ pipeline {
     agent {label 'master'}
     options {
         timestamps ()
-        parallelsAlwaysFailFast()
     }
     parameters {
-        booleanParam(name: 'test_gkhcontent', defaultValue: false, description: 'test.gkhcontent.ru')
-        booleanParam(name: 'nit', defaultValue: false, description: 'nit.dom.test.gosuslugi.ru(>X<)')
-        booleanParam(name: 'gkhcontent', defaultValue: false, description: 'gkhcontent.ru')
-        booleanParam(name: 'vtc', defaultValue: false, description: 'vtc.dom.test.gosuslugi.ru')
-        booleanParam(name: 'mob_hcs', defaultValue: false, description: 'mob.hcs.lanit.ru')
-        booleanParam(name: 'idp_jks_update', defaultValue: false, description: 'Обновление idp.jks для сервиса idp')
-        booleanParam(name: 'jira_keystore_update', defaultValue: false, description: 'Обновление jira.keystore')
-        booleanParam(name: 'mail', defaultValue: false, description: 'mail.dom.test.gosuslugi.ru(>X<)')
-        booleanParam(name: 'update_certs_mail', defaultValue: false, description: 'update certs mail.dom.test.gosuslugi.ru')
-        booleanParam(name: 'sit', defaultValue: false, description: 'sit0[1-2].dom.test.gosuslugi.ru')
-        booleanParam(name: 'nt01', defaultValue: false, description: 'nt01.dom.test.gosuslugi.ru')
-        booleanParam(name: 'kpak', defaultValue: false, description: 'kpak.dom.test.gosuslugi.ru')
-        booleanParam(name: 'ft01', defaultValue: false, description: 'ft01.dom.test.gosuslugi.ru')
-        booleanParam(name: 'sreda_vtc', defaultValue: false, description: 'sreda.vtc.dom.test.gosuslugi.ru')
-        booleanParam(name: 'sreda_ft01', defaultValue: false, description: 'sreda.ft01.dom.test.gosuslugi.ru')
-        booleanParam(name: 'ssp', defaultValue: false, description: 'ssp.dom.test.gosuslugi.ru')
-        booleanParam(name: 'vtc-esia_nt-esia', defaultValue: false, description: 'vtc-esia & nt-esia')
-        
+        booleanParam(name: 'GKHCONTENT', defaultValue: false, description: 'gkhcontent.ru')
+        booleanParam(name: 'TEST_GKHCONTENT', defaultValue: false, description: 'test.gkhcontent.ru')
+
+        booleanParam(name: 'VTC', defaultValue: false, description: 'vtc.dom.test.gosuslugi.ru')
+        booleanParam(name: 'SIT', defaultValue: false, description: 'sit0[1-2].dom.test.gosuslugi.ru')
+        booleanParam(name: 'SSP', defaultValue: false, description: 'ssp.dom.test.gosuslugi.ru')
+        booleanParam(name: 'NT01', defaultValue: false, description: 'nt01.dom.test.gosuslugi.ru')
+        booleanParam(name: 'KPAK', defaultValue: false, description: 'kpak.dom.test.gosuslugi.ru')
+        booleanParam(name: 'FT01', defaultValue: false, description: 'ft01.dom.test.gosuslugi.ru')
+        booleanParam(name: 'SREDA_VTC', defaultValue: false, description: 'sreda.vtc.dom.test.gosuslugi.ru')
+        booleanParam(name: 'SREDA_FT01', defaultValue: false, description: 'sreda.ft01.dom.test.gosuslugi.ru')
+
+        booleanParam(name: 'UPDATE_CERTS_MAIL', defaultValue: false, description: 'update certs mail.dom.test.gosuslugi.ru')
+
+        booleanParam(name: 'MOB_HCS_LANIT', defaultValue: false, description: 'mob.hcs.lanit.ru')
+        booleanParam(name: 'ESIA_VTC', defaultValue: false, description: 'vtc-esia & nt-esia')
+        booleanParam(name: 'ESIA_NT', defaultValue: false, description: 'vtc-esia & nt-esia')
+
+        booleanParam(name: 'IDP_JKS_UPDATE', defaultValue: false, description: 'Updating idp.jks for idp service')
+        booleanParam(name: 'JIRA_KEYSTORE_UPDATE', defaultValue: false, description: 'Updating jira.keystore')
+
         string(name: 'ANSIBLE_BECOME_USER', defaultValue: '', description: 'Enter username for Ansible BECOME')
+
+        booleanParam(name: 'NIT', defaultValue: false, description: 'nit.dom.test.gosuslugi.ru(deleted)')
+        booleanParam(name: 'MAIL', defaultValue: false, description: 'mail.dom.test.gosuslugi.ru(deleted)')
 //        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
 //        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
 //        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
