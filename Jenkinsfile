@@ -331,7 +331,7 @@ pipeline {
         //     steps {
         // }
 
-        stage('test.gkhcontent.ru') {
+        stage('plug stage') {
             when {
                 expression { return params.TEST_GKHCONTENT }
             }
@@ -344,7 +344,7 @@ pipeline {
             }
         }
     }
-    
+
     post {
         success {
             echo "0"
