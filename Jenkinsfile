@@ -59,35 +59,47 @@ pipeline {
     }
     environment {
         PWD_VAR = "${WORKSPACE}"
+        PROJECT = 'my_gip'
     }
 
     stages {
 
-        stage('Git checkout') {
-            steps {
-                git branch: 'update_certs_try', 
-                    changelog: false, 
-                    credentialsId: 'jenkins-master-git-key', 
-                    url: 'git@github.com:lykarik/my_gip.git'
-            }
-        }
+        // stage('Git checkout') {
+        //     steps {
+        //         git branch: 'update_certs_try', 
+        //             changelog: false, 
+        //             credentialsId: 'jenkins-master-git-key', 
+        //             url: 'git@github.com:lykarik/my_gip.git'
+        //     }
+        // }
 
         stage('Another checkout') {
             steps {
                 dir("${WORKSPACE}") {
                     checkout([$class: 'GitSCM',
-                            branches: [[name: "main"]],
-                            doGenerateSubmoduleConfigurations: false,
-                            extensions: [
-                                [$class: 'SubmoduleOption', shallow: true, depth: "1", parentCredentials: true],
-                                [$class: 'GitLFSPull'],
-                                [$class: 'CloneOption', reference: "/var/lib/jenkins/workspace/_git/my_gip.git", shallow: true, depth: "1"],
-                                [$class: 'RelativeTargetDirectory', relativeTargetDir: "my_gip.git"],
-                            ],
-                            gitTool: 'Default',
-                            submoduleCfg: [],
-                            userRemoteConfigs: [[url: 'git@github.com:lykarik/my_gip.git', credentialsId: 'jenkins-master-git-key']]
-                        ])
+
+                                userRemoteConfigs: [[url: "git@github.com:lykarik/${PROJECT}.git", credentialsId: 'jenkins-master-git-key']],
+                                branches: [[name: "main"], [name: "update_certs_try"]],
+                                doGenerateSubmoduleConfigurations: false,
+                                gitTool: 'Default',
+                                submoduleCfg: [],
+                                
+                                extensions: [
+                                    [$class: 'SubmoduleOption', 
+                                        shallow: true, 
+                                        depth: "1", 
+                                        parentCredentials: true],
+                                    [$class: 'GitLFSPull'],
+                                    [$class: 'CloneOption', 
+                                        reference: "/var/lib/jenkins/workspace/_git", 
+                                        shallow: true, 
+                                        depth: "1"],
+                                    [$class: 'RelativeTargetDirectory', 
+                                    relativeTargetDir: "${PROJECT}_${BUILD_DISPLAY_NAME}_${params.Branch}"]
+                                ]
+
+                    ])
+                    sh "git status"
                 }
             }
         }
