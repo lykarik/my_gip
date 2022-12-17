@@ -30,28 +30,28 @@ pipeline {
         timestamps ()
     }
     parameters {
-        booleanParam(name: 'GKHCONTENT',                defaultValue: false, description: 'gkhcontent.ru')
-        booleanParam(name: 'TEST_GKHCONTENT',           defaultValue: true, description: 'test.gkhcontent.ru')
-
-        booleanParam(name: 'VTC',                       defaultValue: false, description: 'vtc.dom.test.gosuslugi.ru')
-        booleanParam(name: 'SIT',                       defaultValue: false, description: 'sit0[1-2].dom.test.gosuslugi.ru')
-        booleanParam(name: 'SSP',                       defaultValue: false, description: 'ssp.dom.test.gosuslugi.ru')
-        booleanParam(name: 'NT01',                      defaultValue: false, description: 'nt01.dom.test.gosuslugi.ru')
-        booleanParam(name: 'KPAK',                      defaultValue: false, description: 'kpak.dom.test.gosuslugi.ru')
-        booleanParam(name: 'FT01',                      defaultValue: false, description: 'ft01.dom.test.gosuslugi.ru')
-        booleanParam(name: 'SREDA_VTC',                 defaultValue: false, description: 'sreda.vtc.dom.test.gosuslugi.ru')
-        booleanParam(name: 'SREDA_FT01',                defaultValue: false, description: 'sreda.ft01.dom.test.gosuslugi.ru')
-
-        booleanParam(name: 'UPDATE_CERTS_MAIL',         defaultValue: false, description: 'update certs mail.dom.test.gosuslugi.ru')
-
-        booleanParam(name: 'MOB_HCS_LANIT',             defaultValue: false, description: 'mob.hcs.lanit.ru')
-        booleanParam(name: 'ESIA_VTC',                  defaultValue: false, description: 'vtc-esia')
-        booleanParam(name: 'ESIA_NT',                   defaultValue: false, description: 'nt-esia')
+        booleanParam(name: 'GKHCONTENT',                defaultValue: false, description: 'gkhcontent.ru')                              //1
+        booleanParam(name: 'TEST_GKHCONTENT',           defaultValue: false, description: 'test.gkhcontent.ru')                         //2
+                                                                                                                                        //
+        booleanParam(name: 'VTC',                       defaultValue: false, description: 'vtc.dom.test.gosuslugi.ru')                  //3
+        booleanParam(name: 'SIT',                       defaultValue: false, description: 'sit0[1-2].dom.test.gosuslugi.ru')            //4
+        booleanParam(name: 'SSP',                       defaultValue: false, description: 'ssp.dom.test.gosuslugi.ru')                  //5
+        booleanParam(name: 'NT01',                      defaultValue: false, description: 'nt01.dom.test.gosuslugi.ru')                 //6
+        booleanParam(name: 'KPAK',                      defaultValue: false, description: 'kpak.dom.test.gosuslugi.ru')                 //7
+        booleanParam(name: 'FT01',                      defaultValue: false, description: 'ft01.dom.test.gosuslugi.ru')                 //8
+        booleanParam(name: 'SREDA_VTC',                 defaultValue: false, description: 'sreda.vtc.dom.test.gosuslugi.ru')            //9
+        booleanParam(name: 'SREDA_FT01',                defaultValue: false, description: 'sreda.ft01.dom.test.gosuslugi.ru')           //10
+                                                                                                                                        //
+        booleanParam(name: 'UPDATE_CERTS_MAIL',         defaultValue: false, description: 'Update certs mail.dom.test.gosuslugi.ru')    //11
+                                                                                                                                        //
+        booleanParam(name: 'MOB_HCS_LANIT',             defaultValue: false, description: 'mob.hcs.lanit.ru')                           //12
+        booleanParam(name: 'ESIA_VTC',                  defaultValue: false, description: 'vtc-esia')                                   //13
+        booleanParam(name: 'ESIA_NT',                   defaultValue: false, description: 'nt-esia')                                    //14
 
         booleanParam(name: 'IDP_JKS_UPDATE',            defaultValue: false, description: 'Updating idp.jks for idp service')
         booleanParam(name: 'JIRA_KEYSTORE_UPDATE',      defaultValue: false, description: 'Updating jira.keystore')
 
-        string(name: 'ANSIBLE_BECOME_USER',             defaultValue: '', description: 'Enter username for Ansible BECOME')
+        string(name: 'ANSIBLE_BECOME_USER',             defaultValue: '', description: 'Enter username for Ansible BECOME')             
 
         booleanParam(name: 'NIT',                       defaultValue: false, description: 'nit.dom.test.gosuslugi.ru(deleted)')
         booleanParam(name: 'MAIL',                      defaultValue: false, description: 'mail.dom.test.gosuslugi.ru(deleted)')
@@ -64,7 +64,7 @@ pipeline {
 
     stages {
 
-        stage('Git checkout') {
+        stage('Git checkout for Jenkinsfile') {
             steps {
                 git branch: 'update_certs_try', 
                     changelog: false, 
@@ -73,7 +73,7 @@ pipeline {
             }
         }
 
-        stage('Another checkout') {
+        stage('Git checkout main branch') {
             steps {
                 dir("${WORKSPACE}") {
                     checkout([$class: 'GitSCM',
@@ -99,12 +99,32 @@ pipeline {
                                 ]
 
                     ])
-                    sh "git status"
+                }
+            }
+        }
+        //1
+        stage('gkhcontent.ru') {
+            when {
+                expression { return params.GKHCONTENT }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
                 }
             }
         }
 
-        stage('Test ansible') {
+        //2
+        stage('test.gkhcontent.ru') {
             when {
                 expression { return params.TEST_GKHCONTENT }
             }
@@ -123,6 +143,298 @@ pipeline {
                 }
             }
         }
+
+        //3
+        stage('vtc.dom.test.gosuslugi.ru') {
+            when {
+                expression { return params.VTC }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
+        //4
+        stage('sit0[1-2].dom.test.gosuslugi.ru') {
+            when {
+                expression { return params.SIT }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
+        //5
+        stage('ssp.dom.test.gosuslugi.ru') {
+            when {
+                expression { return params.SSP }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
+        //6
+        stage('nt01.dom.test.gosuslugi.ru') {
+            when {
+                expression { return params.NT01 }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
+        //7
+        stage('kpak.dom.test.gosuslugi.ru') {
+            when {
+                expression { return params.KPAK }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
+        //8
+        stage('ft01.dom.test.gosuslugi.ru') {
+            when {
+                expression { return params.FT01 }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
+        //9
+        stage('sreda.vtc.dom.test.gosuslugi.ru') {
+            when {
+                expression { return params.SREDA_VTC }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
+        //10
+        stage('sreda.ft01.dom.test.gosuslugi.ru') {
+            when {
+                expression { return params.SREDA_FT01 }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
+        //11
+        stage('Update certs mail.dom.test.gosuslugi.ru') {
+            when {
+                expression { return params.UPDATE_CERTS_MAIL }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
+        //12
+        stage('mob.hcs.lanit.ru') {
+            when {
+                expression { return params.MOB_HCS_LANIT }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
+        //13
+        stage('vtc-esia') {
+            when {
+                expression { return params.ESIA_VTC }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
+        //14
+        stage('nt-esia') {
+            when {
+                expression { return params.ESIA_NT }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'some-group',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
+        // stage('mail.dom.test.gosuslugi.ru(deleted)') {
+        //     when {
+        //         expression { return params.MAIL }
+        //     }
+        //     steps {
+        //         dir("${WORKSPACE}") {
+        //             ansiColor('xterm') {
+        //                 ansiblePlaybook(
+        //                     credentialsId: 'ansible-lol-creds',
+        //                     //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+        //                     becomeUser: "${ANSIBLE_BECOME_USER}",
+        //                     colorized: true,
+        //                     limit: 'some-group',
+        //                     inventory: 'inventories/main',
+        //                     playbook: 'playbooks/what_play.yml')
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage('nit.dom.test.gosuslugi.ru(deleted)') {
+        //     when {
+        //         expression { return params.NIT }
+        //     }
+        //     steps {
+        //         dir("${WORKSPACE}") {
+        //             ansiColor('xterm') {
+        //                 ansiblePlaybook(
+        //                     credentialsId: 'ansible-lol-creds',
+        //                     //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+        //                     becomeUser: "${ANSIBLE_BECOME_USER}",
+        //                     colorized: true,
+        //                     limit: 'some-group',
+        //                     inventory: 'inventories/main',
+        //                     playbook: 'playbooks/what_play.yml')
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('test.gkhcontent.ru') {
             when {
