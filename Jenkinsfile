@@ -92,7 +92,7 @@ pipeline {
                                 //         shallow: true, 
                                 //         depth: "1"],
                                     [$class: 'RelativeTargetDirectory', 
-                                    relativeTargetDir: "my_gip_${BRANCH_NAME}"]
+                                    relativeTargetDir: "my_gip_${BUILD_DISPLAY_NAME}"]
                                 ]
                             ])
                 }
