@@ -104,6 +104,26 @@ pipeline {
             }
         }
 
+        stage('Test ansible') {
+            when {
+                expression { return params.TEST_GKHCONTENT }
+            }
+            steps {
+                dir("${WORKSPACE}") {
+                    ansiColor('xterm') {
+                        ansiblePlaybook(
+                            credentialsId: 'ansible-lol-creds',
+                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+                            becomeUser: "${ANSIBLE_BECOME_USER}",
+                            colorized: true,
+                            limit: 'vtc-gkhcontent',
+                            inventory: 'inventories/main',
+                            playbook: 'playbooks/what_play.yml')
+                    }
+                }
+            }
+        }
+
         stage('test.gkhcontent.ru') {
             when {
                 expression { return params.TEST_GKHCONTENT }
