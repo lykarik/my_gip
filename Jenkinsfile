@@ -64,14 +64,14 @@ pipeline {
 
     stages {
 
-        // stage('Git checkout') {
-        //     steps {
-        //         git branch: 'update_certs_try', 
-        //             changelog: false, 
-        //             credentialsId: 'jenkins-master-git-key', 
-        //             url: 'git@github.com:lykarik/my_gip.git'
-        //     }
-        // }
+        stage('Git checkout') {
+            steps {
+                git branch: 'update_certs_try', 
+                    changelog: false, 
+                    credentialsId: 'jenkins-master-git-key', 
+                    url: 'git@github.com:lykarik/my_gip.git'
+            }
+        }
 
         stage('Another checkout') {
             steps {
@@ -79,7 +79,7 @@ pipeline {
                     checkout([$class: 'GitSCM',
 
                                 userRemoteConfigs: [[url: "git@github.com:lykarik/${PROJECT}.git", credentialsId: 'jenkins-master-git-key']],
-                                branches: [[name: "main"], [name: "update_certs_try"]],
+                                branches: [[name: "main"]],
                                 doGenerateSubmoduleConfigurations: false,
                                 gitTool: 'Default',
                                 submoduleCfg: [],
