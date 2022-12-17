@@ -138,7 +138,6 @@ pipeline {
     }
 
     stages {
-
         stage('Git checkout for Jenkinsfile') {
             steps {
                 git branch: 'update_certs_try', 
@@ -186,6 +185,7 @@ pipeline {
                 INVENTORY = 'inventories/voshod/ppak' }
             steps {
                 playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT, INVENTORY) }
+        }
         //2
         stage('test.gkhcontent.ru') {
             when {
@@ -195,6 +195,7 @@ pipeline {
                 INVENTORY = 'inventories/voshod/ppak' }
             steps {
                 playbook_pki_letsencrypt_nginx (ansible_limit, inventory) }
+        }
         //3
         stage('vtc.dom.test.gosuslugi.ru') {
             when {
@@ -202,6 +203,7 @@ pipeline {
             }
             steps {
                 playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
+            }
         }
 
         //4
@@ -211,6 +213,7 @@ pipeline {
             }
             steps {
                 playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
+            }
         }
 
         //5
@@ -220,6 +223,7 @@ pipeline {
             }
             steps {
                 playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
+            }
         }
 
         //6
@@ -229,6 +233,7 @@ pipeline {
             }
             steps {
                 playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
+            }
         }
 
         //7
@@ -238,6 +243,7 @@ pipeline {
             }
             steps {
                 playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
+            }
         }
 
         //8
@@ -247,6 +253,7 @@ pipeline {
             }
             steps {
                 playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
+            }
         }
 
         //9
@@ -256,6 +263,7 @@ pipeline {
             }
             steps {
                 playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
+            }
         }
 
         //10
@@ -265,6 +273,7 @@ pipeline {
             }
             steps {
                 playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
+            }
         }
 
         //11
@@ -273,7 +282,7 @@ pipeline {
                 expression { return params.UPDATE_CERTS_MAIL }
             }
             steps {
-                ansible-common/playbooks/postfix.yml
+                echo "plug"
         }
 
         //12
@@ -283,6 +292,7 @@ pipeline {
             }
             steps {
                 playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
+            }
         }
 
         //13
@@ -291,6 +301,7 @@ pipeline {
                 expression { return params.ESIA_VTC }
             }
             steps {
+                echo "plug"
         }
 
         //14
@@ -299,6 +310,7 @@ pipeline {
                 expression { return params.ESIA_NT }
             }
             steps {
+                echo "plug"
         }
 
         // stage('mail.dom.test.gosuslugi.ru(deleted)') {
@@ -328,7 +340,6 @@ pipeline {
                 sh "ls -la"
             }
         }
-
     }
 
     post {
