@@ -341,7 +341,7 @@ pipeline {
             }
         }
     }
-
+}
     post {
         success {
             echo "0"
@@ -356,6 +356,8 @@ pipeline {
 //            telegram("😡 ABORTED", true)
         }
     }
+}
+}
 }
 
 //     stage('Git checkout on master') {
