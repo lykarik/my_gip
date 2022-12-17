@@ -85,7 +85,7 @@ pipeline {
                                 parentCredentials: true],
                             [$class: 'GitLFSPull'],
                             [$class: 'CloneOption', 
-                                reference: "/var/lib/jenkins/workspace/certs_update/_git/my_gip.git", 
+                                reference: "", 
                                 shallow: true, 
                                 depth: "1"],
                             [$class: 'RelativeTargetDirectory', 
