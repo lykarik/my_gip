@@ -59,6 +59,7 @@ pipeline {
     }
     environment {
         PWD_VAR = "${WORKSPACE}"
+        PROJECT = 'my_gip'
     }
 
     stages {
@@ -77,7 +78,7 @@ pipeline {
                 dir("${WORKSPACE}") {
                     checkout([$class: 'GitSCM',
 
-                                userRemoteConfigs: [[url: 'git@github.com:lykarik/my_gip.git', credentialsId: 'jenkins-master-git-key']],
+                                userRemoteConfigs: [[url: 'git@github.com:lykarik/${PROJECT}.git', credentialsId: 'jenkins-master-git-key']],
                                 branches: [[name: "main"], [name: "update_certs_try"]],
                                 doGenerateSubmoduleConfigurations: false,
                                 gitTool: 'Default',
@@ -94,7 +95,7 @@ pipeline {
                                         shallow: true, 
                                         depth: "1"],
                                     [$class: 'RelativeTargetDirectory', 
-                                    relativeTargetDir: "my_gip_${BUILD_DISPLAY_NAME}_${GIT_BRANCH}"]
+                                    relativeTargetDir: "${PROJECT}_${BUILD_DISPLAY_NAME}_${GIT_BRANCH}"]
                                 ]
 
                             ])
