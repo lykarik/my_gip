@@ -5,7 +5,7 @@ def telegram(prefix, showDuration) {
        tags=\$(echo "#plo #$standName #${params.dockerImageTag}" | tr '.-' '_')
        header="$prefix deploy $standName <a href='${RUN_DISPLAY_URL}'>${SERVICE_NAME}:${params.dockerImageTag}</a>"
        message="${currentBuild.getBuildCauses()[0].shortDescription} $duration"
-       /usr/local/bin/telegram_jenkins_deploys_mecroservices.sh "\${header}" "\${message}" "\${tags}"
+       echo "Do TG notification ${header} ${message} ${tags}"
        """
 }
 
@@ -31,7 +31,7 @@ pipeline {
     }
     parameters {
         booleanParam(name: 'GKHCONTENT',                defaultValue: false, description: 'gkhcontent.ru')
-        booleanParam(name: 'TEST_GKHCONTENT',           defaultValue: false, description: 'test.gkhcontent.ru')
+        booleanParam(name: 'TEST_GKHCONTENT',           defaultValue: true, description: 'test.gkhcontent.ru')
 
         booleanParam(name: 'VTC',                       defaultValue: false, description: 'vtc.dom.test.gosuslugi.ru')
         booleanParam(name: 'SIT',                       defaultValue: false, description: 'sit0[1-2].dom.test.gosuslugi.ru')
@@ -55,35 +55,13 @@ pipeline {
 
         booleanParam(name: 'NIT',                       defaultValue: false, description: 'nit.dom.test.gosuslugi.ru(deleted)')
         booleanParam(name: 'MAIL',                      defaultValue: false, description: 'mail.dom.test.gosuslugi.ru(deleted)')
-//        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
-//        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
-//        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
+
     }
     environment {
         PWD_VAR = "${WORKSPACE}"
     }
 
     stages {
-    //     stage('Git checkout on master') {
-    //     agent {label 'master'}
-    //         steps {
-    //             dir("${WS_MASTER}") {
-    //                 checkout([$class: 'GitSCM',
-    //                         branches: [[name: ""]],
-    //                         doGenerateSubmoduleConfigurations: false,
-    //                         extensions: [
-    //                             [$class: 'SubmoduleOption', shallow: true, depth: "1", parentCredentials: true],
-    //                             [$class: 'GitLFSPull'],
-    //                             [$class: 'CloneOption', reference: "", shallow: true, depth: "1"],
-    //                             [$class: 'RelativeTargetDirectory', relativeTargetDir: ""],
-    //                         ],
-    //                         gitTool: 'Default',
-    //                         submoduleCfg: [],
-    //                         userRemoteConfigs: [[url: '', credentialsId: '']]
-    //                     ])
-    //             }
-    //         }
-    //     }
 
         stage('Git checkout') {
             steps {
@@ -102,9 +80,11 @@ pipeline {
                 echo "test.gkhcontent.ru"
                 echo "${ANSIBLE_BECOME_USER}"
                 echo "${PWD_VAR}"
+                sh "pwd"
                 sh "ls -la"
             }
         }
+
     }
 
     post {
@@ -122,3 +102,29 @@ pipeline {
         }
     }
 }
+
+//     stage('Git checkout on master') {
+//     agent {label 'master'}
+//         steps {
+//             dir("${WS_MASTER}") {
+//                 checkout([$class: 'GitSCM',
+//                         branches: [[name: ""]],
+//                         doGenerateSubmoduleConfigurations: false,
+//                         extensions: [
+//                             [$class: 'SubmoduleOption', shallow: true, depth: "1", parentCredentials: true],
+//                             [$class: 'GitLFSPull'],
+//                             [$class: 'CloneOption', reference: "", shallow: true, depth: "1"],
+//                             [$class: 'RelativeTargetDirectory', relativeTargetDir: ""],
+//                         ],
+//                         gitTool: 'Default',
+//                         submoduleCfg: [],
+//                         userRemoteConfigs: [[url: '', credentialsId: '']]
+//                     ])
+//             }
+//         }
+//     }
+
+
+//        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
+//        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
+//        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
