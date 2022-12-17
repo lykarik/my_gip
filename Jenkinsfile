@@ -11,7 +11,7 @@ node ("node02"){
       }
     }
 
-    stage ('Maven test'){
+    stage ('MaveN test'){
       dir('maven_app') {
         sh 'mvn test'
       }
