@@ -192,9 +192,10 @@ pipeline {
                 expression { return params.TEST_GKHCONTENT } }
             environment {
                 ANSIBLE_LIMIT ='some-group'
-                INVENTORY = 'inventories/main' }
+                INVENTORY = 'inventories/main'
+                PLAYBOOK = 'playbooks/what_play.yml' }
             steps {
-                playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT, INVENTORY) }
+                playbook_init (ANSIBLE_LIMIT, INVENTORY, PLAYBOOK) }
         }
         //3
         stage('vtc.dom.test.gosuslugi.ru') {
