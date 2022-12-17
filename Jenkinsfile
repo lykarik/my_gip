@@ -98,7 +98,8 @@ pipeline {
                                     relativeTargetDir: "${PROJECT}_${BUILD_DISPLAY_NAME}_${GIT_BRANCH}"]
                                 ]
 
-                            ])
+                    ])
+                    sh "git status"
                 }
             }
         }
