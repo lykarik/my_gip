@@ -9,17 +9,92 @@ def telegram(prefix, showDuration) {
        """
 }
 
-def playbook_init () {
-    dir("") {
+def playbook_init (ansible_limit, inventory, playbook) {
+    dir("${WORKSPACE}") {
         ansiColor('xterm') {
             ansiblePlaybook(
              credentialsId: '',
              vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
              becomeUser: "${ANSIBLE_BECOME_USER}",
              colorized: true,
-             limit: 'vtc-gkhcontent',
-             inventory: 'inventories/voshod/test',
+             limit: "${ansible_limit}",
+             inventory: "${inventory}",
+             playbook: "${playbook}")
+        }
+    }
+}
+
+def playbook_pki_letsencrypt_nginx (ansible_limit, inventory) {
+    dir("${WORKSPACE}") {
+        ansiColor('xterm') {
+            ansiblePlaybook(
+             credentialsId: '',
+             vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+             becomeUser: "${ANSIBLE_BECOME_USER}",
+             colorized: true,
+             limit: "${ansible_limit}",
+             inventory: "${inventory}",
              playbook: 'ansible-common/playbooks/pki-letsencrypt-nginx.yml')
+        }
+    }
+}
+
+def playbook_nginx_ng_rsa (ansible_limit, inventory) {
+    dir("${WORKSPACE}") {
+        ansiColor('xterm') {
+            ansiblePlaybook(
+             credentialsId: '',
+             vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+             becomeUser: "${ANSIBLE_BECOME_USER}",
+             colorized: true,
+             limit: "${ansible_limit}",
+             inventory: "${inventory}",
+             playbook: 'playbooks/Nginx-ng-rsa.yml')
+        }
+    }
+}
+
+def playbook_nginx_ng (ansible_limit, inventory) {
+    dir("${WORKSPACE}") {
+        ansiColor('xterm') {
+            ansiblePlaybook(
+             credentialsId: '',
+             vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+             becomeUser: "${ANSIBLE_BECOME_USER}",
+             colorized: true,
+             limit: "${ansible_limit}",
+             inventory: "${inventory}",
+             playbook: 'playbooks/Nginx-ng.yml')
+        }
+    }
+}
+
+def playbook_update_jks (ansible_limit, inventory) {
+    dir("${WORKSPACE}") {
+        ansiColor('xterm') {
+            ansiblePlaybook(
+             credentialsId: '',
+             vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+             becomeUser: "${ANSIBLE_BECOME_USER}",
+             colorized: true,
+             limit: "${ansible_limit}",
+             inventory: "${inventory}",
+             playbook: 'playbooks/update_jks.yml')
+        }
+    }
+}
+
+def playbook_hcs_keys_install (ansible_limit, inventory) {
+    dir("${WORKSPACE}") {
+        ansiColor('xterm') {
+            ansiblePlaybook(
+             credentialsId: '',
+             vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+             becomeUser: "${ANSIBLE_BECOME_USER}",
+             colorized: true,
+             limit: "${ansible_limit}",
+             inventory: "${inventory}",
+             playbook: 'hcs-keys-install.yml')
         }
     }
 }
@@ -31,7 +106,7 @@ pipeline {
     }
     parameters {
         booleanParam(name: 'GKHCONTENT',                defaultValue: false, description: 'gkhcontent.ru')                              //1
-        booleanParam(name: 'TEST_GKHCONTENT',           defaultValue: false, description: 'test.gkhcontent.ru')                         //2
+        booleanParam(name: 'TEST_GKHCONTENT',           defaultValue: true, description: 'test.gkhcontent.ru')                         //2
                                                                                                                                         //
         booleanParam(name: 'VTC',                       defaultValue: false, description: 'vtc.dom.test.gosuslugi.ru')                  //3
         booleanParam(name: 'SIT',                       defaultValue: false, description: 'sit0[1-2].dom.test.gosuslugi.ru')            //4
@@ -105,64 +180,28 @@ pipeline {
         //1
         stage('gkhcontent.ru') {
             when {
-                expression { return params.GKHCONTENT }
-            }
+                expression { return params.GKHCONTENT } }
+            environment {
+                ANSIBLE_LIMIT ='gkhcontent'
+                INVENTORY = 'inventories/voshod/ppak' }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
-        }
-
+                playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT, INVENTORY) }
         //2
         stage('test.gkhcontent.ru') {
             when {
-                expression { return params.TEST_GKHCONTENT }
-            }
+                expression { return params.TEST_GKHCONTENT } }
+            environment {
+                ANSIBLE_LIMIT ='gkhcontent'
+                INVENTORY = 'inventories/voshod/ppak' }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
-        }
-
+                playbook_pki_letsencrypt_nginx (ansible_limit, inventory) }
         //3
         stage('vtc.dom.test.gosuslugi.ru') {
             when {
                 expression { return params.VTC }
             }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
+                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
         }
 
         //4
@@ -171,19 +210,7 @@ pipeline {
                 expression { return params.SIT }
             }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
+                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
         }
 
         //5
@@ -192,19 +219,7 @@ pipeline {
                 expression { return params.SSP }
             }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
+                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
         }
 
         //6
@@ -213,19 +228,7 @@ pipeline {
                 expression { return params.NT01 }
             }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
+                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
         }
 
         //7
@@ -234,19 +237,7 @@ pipeline {
                 expression { return params.KPAK }
             }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
+                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
         }
 
         //8
@@ -255,19 +246,7 @@ pipeline {
                 expression { return params.FT01 }
             }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
+                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
         }
 
         //9
@@ -276,19 +255,7 @@ pipeline {
                 expression { return params.SREDA_VTC }
             }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
+                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
         }
 
         //10
@@ -297,19 +264,7 @@ pipeline {
                 expression { return params.SREDA_FT01 }
             }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
+                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
         }
 
         //11
@@ -318,19 +273,7 @@ pipeline {
                 expression { return params.UPDATE_CERTS_MAIL }
             }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
+                ansible-common/playbooks/postfix.yml
         }
 
         //12
@@ -339,19 +282,7 @@ pipeline {
                 expression { return params.MOB_HCS_LANIT }
             }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
+                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
         }
 
         //13
@@ -360,19 +291,6 @@ pipeline {
                 expression { return params.ESIA_VTC }
             }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
         }
 
         //14
@@ -381,39 +299,14 @@ pipeline {
                 expression { return params.ESIA_NT }
             }
             steps {
-                dir("${WORKSPACE}") {
-                    ansiColor('xterm') {
-                        ansiblePlaybook(
-                            credentialsId: 'ansible-lol-creds',
-                            //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-                            becomeUser: "${ANSIBLE_BECOME_USER}",
-                            colorized: true,
-                            limit: 'some-group',
-                            inventory: 'inventories/main',
-                            playbook: 'playbooks/what_play.yml')
-                    }
-                }
-            }
         }
 
         // stage('mail.dom.test.gosuslugi.ru(deleted)') {
         //     when {
         //         expression { return params.MAIL }
         //     }
-        //     steps {
-        //         dir("${WORKSPACE}") {
-        //             ansiColor('xterm') {
-        //                 ansiblePlaybook(
-        //                     credentialsId: 'ansible-lol-creds',
-        //                     //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-        //                     becomeUser: "${ANSIBLE_BECOME_USER}",
-        //                     colorized: true,
-        //                     limit: 'some-group',
-        //                     inventory: 'inventories/main',
-        //                     playbook: 'playbooks/what_play.yml')
-        //             }
-        //         }
-        //     }
+        //    steps {
+        //       playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
         // }
 
         // stage('nit.dom.test.gosuslugi.ru(deleted)') {
@@ -421,19 +314,6 @@ pipeline {
         //         expression { return params.NIT }
         //     }
         //     steps {
-        //         dir("${WORKSPACE}") {
-        //             ansiColor('xterm') {
-        //                 ansiblePlaybook(
-        //                     credentialsId: 'ansible-lol-creds',
-        //                     //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
-        //                     becomeUser: "${ANSIBLE_BECOME_USER}",
-        //                     colorized: true,
-        //                     limit: 'some-group',
-        //                     inventory: 'inventories/main',
-        //                     playbook: 'playbooks/what_play.yml')
-        //             }
-        //         }
-        //     }
         // }
 
         stage('test.gkhcontent.ru') {
