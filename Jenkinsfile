@@ -13,8 +13,8 @@ def playbook_init (ansible_limit, inventory, playbook) {
     dir("${WORKSPACE}") {
         ansiColor('xterm') {
             ansiblePlaybook(
-             credentialsId: '',
-             vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+             credentialsId: 'ansible-lol-creds',
+             //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
              becomeUser: "${ANSIBLE_BECOME_USER}",
              colorized: true,
              limit: "${ansible_limit}",
@@ -29,7 +29,7 @@ def playbook_pki_letsencrypt_nginx (ansible_limit, inventory) {
         ansiColor('xterm') {
             ansiblePlaybook(
              credentialsId: '',
-             vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+             //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
              becomeUser: "${ANSIBLE_BECOME_USER}",
              colorized: true,
              limit: "${ansible_limit}",
@@ -44,7 +44,7 @@ def playbook_nginx_ng_rsa (ansible_limit, inventory) {
         ansiColor('xterm') {
             ansiblePlaybook(
              credentialsId: '',
-             vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+             //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
              becomeUser: "${ANSIBLE_BECOME_USER}",
              colorized: true,
              limit: "${ansible_limit}",
@@ -59,7 +59,7 @@ def playbook_nginx_ng (ansible_limit, inventory) {
         ansiColor('xterm') {
             ansiblePlaybook(
              credentialsId: '',
-             vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+             //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
              becomeUser: "${ANSIBLE_BECOME_USER}",
              colorized: true,
              limit: "${ansible_limit}",
@@ -74,7 +74,7 @@ def playbook_update_jks (ansible_limit, inventory) {
         ansiColor('xterm') {
             ansiblePlaybook(
              credentialsId: '',
-             vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+             //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
              becomeUser: "${ANSIBLE_BECOME_USER}",
              colorized: true,
              limit: "${ansible_limit}",
@@ -89,7 +89,7 @@ def playbook_hcs_keys_install (ansible_limit, inventory) {
         ansiColor('xterm') {
             ansiblePlaybook(
              credentialsId: '',
-             vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
+             //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
              becomeUser: "${ANSIBLE_BECOME_USER}",
              colorized: true,
              limit: "${ansible_limit}",
