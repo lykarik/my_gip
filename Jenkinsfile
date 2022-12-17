@@ -191,10 +191,10 @@ pipeline {
             when {
                 expression { return params.TEST_GKHCONTENT } }
             environment {
-                ANSIBLE_LIMIT ='gkhcontent'
-                INVENTORY = 'inventories/voshod/ppak' }
+                ANSIBLE_LIMIT ='some-group'
+                INVENTORY = 'inventories/main' }
             steps {
-                playbook_pki_letsencrypt_nginx (ansible_limit, inventory) }
+                playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT, INVENTORY) }
         }
         //3
         stage('vtc.dom.test.gosuslugi.ru') {
