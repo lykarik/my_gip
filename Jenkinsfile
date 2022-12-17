@@ -94,9 +94,9 @@ pipeline {
                                         shallow: true, 
                                         depth: "1"],
                                     [$class: 'RelativeTargetDirectory', 
-                                    relativeTargetDir: "my_gip_${BUILD_DISPLAY_NAME}"]
+                                    relativeTargetDir: "my_gip_${BUILD_DISPLAY_NAME}_${GIT_BRANCH}"]
                                 ]
-                                
+
                             ])
                 }
             }
