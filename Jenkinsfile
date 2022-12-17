@@ -79,7 +79,7 @@ pipeline {
                     checkout([$class: 'GitSCM',
 
                                 userRemoteConfigs: [[url: "git@github.com:lykarik/${PROJECT}.git", credentialsId: 'jenkins-master-git-key']],
-                                branches: [[name: "main"], [name: "update_certs_try"]],
+                                branches: [[name: "main"]],
                                 doGenerateSubmoduleConfigurations: false,
                                 gitTool: 'Default',
                                 submoduleCfg: [],
