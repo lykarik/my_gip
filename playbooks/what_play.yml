@@ -1,0 +1,4 @@
+- hosts:
+    - some-group
+  tasks:
+    - action: ping

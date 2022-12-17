@@ -1,0 +1,2 @@
+[some-group]
+jenkins-slave01 ansible_host=192.168.98.241
