@@ -76,24 +76,27 @@ pipeline {
             steps {
                 dir("${WORKSPACE}") {
                     checkout([$class: 'GitSCM',
+
+                                userRemoteConfigs: [[url: 'git@github.com:lykarik/my_gip.git', credentialsId: 'jenkins-master-git-key']],
                                 branches: [[name: "main"]],
                                 doGenerateSubmoduleConfigurations: false,
                                 gitTool: 'Default',
                                 submoduleCfg: [],
-                                userRemoteConfigs: [[url: 'git@github.com:lykarik/my_gip.git', credentialsId: 'jenkins-master-git-key']],
+                                
                                 extensions: [
-                                //     [$class: 'SubmoduleOption', 
-                                //         shallow: true, 
-                                //         depth: "1", 
-                                //         parentCredentials: true],
-                                //     [$class: 'GitLFSPull'],
-                                //     [$class: 'CloneOption', 
-                                //         reference: "/var/lib/jenkins/workspace/_git/my_gip.git", 
-                                //         shallow: true, 
-                                //         depth: "1"],
+                                    [$class: 'SubmoduleOption', 
+                                        shallow: true, 
+                                        depth: "1", 
+                                        parentCredentials: true],
+                                    [$class: 'GitLFSPull'],
+                                    [$class: 'CloneOption', 
+                                        reference: "/var/lib/jenkins/workspace/_git", 
+                                        shallow: true, 
+                                        depth: "1"],
                                     [$class: 'RelativeTargetDirectory', 
                                     relativeTargetDir: "my_gip_${BUILD_DISPLAY_NAME}"]
                                 ]
+                                
                             ])
                 }
             }
