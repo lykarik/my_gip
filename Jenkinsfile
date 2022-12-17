@@ -76,14 +76,22 @@ pipeline {
             steps {
                 dir("${WORKSPACE}") {
                     checkout([$class: 'GitSCM',
-                            branches: [[name: "main"]],
-                            doGenerateSubmoduleConfigurations: false,
-                            extensions: [
-                                [$class: 'SubmoduleOption', shallow: true, depth: "1", parentCredentials: true],
-                                [$class: 'GitLFSPull'],
-                                [$class: 'CloneOption', reference: "/var/lib/jenkins/workspace/_git/my_gip.git", shallow: true, depth: "1"],
-                                [$class: 'RelativeTargetDirectory', relativeTargetDir: "my_gip.git"],
+                                branches: [[name: "main"]],
+                                doGenerateSubmoduleConfigurations: false,
+                                extensions: [
+                            [$class: 'SubmoduleOption', 
+                                shallow: true, 
+                                depth: "1", 
+                                parentCredentials: true],
+                            [$class: 'GitLFSPull'],
+                            [$class: 'CloneOption', 
+                                reference: "/var/lib/jenkins/workspace/certs_update/_git/my_gip.git", 
+                                shallow: true, 
+                                depth: "1"],
+                            [$class: 'RelativeTargetDirectory', 
+                                relativeTargetDir: "my_gip.git"],
                             ],
+
                             gitTool: 'Default',
                             submoduleCfg: [],
                             userRemoteConfigs: [[url: 'git@github.com:lykarik/my_gip.git', credentialsId: 'jenkins-master-git-key']]
