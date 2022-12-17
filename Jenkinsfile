@@ -78,24 +78,23 @@ pipeline {
                     checkout([$class: 'GitSCM',
                                 branches: [[name: "main"]],
                                 doGenerateSubmoduleConfigurations: false,
+                                gitTool: 'Default',
+                                submoduleCfg: [],
+                                userRemoteConfigs: [[url: 'git@github.com:lykarik/my_gip.git', credentialsId: 'jenkins-master-git-key']],
                                 extensions: [
-                            [$class: 'SubmoduleOption', 
-                                shallow: true, 
-                                depth: "1", 
-                                parentCredentials: true],
-                            [$class: 'GitLFSPull'],
-                            [$class: 'CloneOption', 
-                                reference: "/var/lib/jenkins/workspace/_git/my_gip.git", 
-                                shallow: true, 
-                                depth: "1"],
-                            [$class: 'RelativeTargetDirectory', 
-                                relativeTargetDir: "my_gip.git"],
-                            ],
-
-                            gitTool: 'Default',
-                            submoduleCfg: [],
-                            userRemoteConfigs: [[url: 'git@github.com:lykarik/my_gip.git', credentialsId: 'jenkins-master-git-key']]
-                        ])
+                                //     [$class: 'SubmoduleOption', 
+                                //         shallow: true, 
+                                //         depth: "1", 
+                                //         parentCredentials: true],
+                                //     [$class: 'GitLFSPull'],
+                                //     [$class: 'CloneOption', 
+                                //         reference: "/var/lib/jenkins/workspace/_git/my_gip.git", 
+                                //         shallow: true, 
+                                //         depth: "1"],
+                                //     [$class: 'RelativeTargetDirectory', 
+                                //         relativeTargetDir: "my_gip.git"],
+                                ]
+                            ])
                 }
             }
         }
