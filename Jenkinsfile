@@ -116,7 +116,7 @@ pipeline {
                             //vaultCredentialsId: 'CredID_HCS_INFRA_ANSIBLE_Vault_Pass',
                             becomeUser: "${ANSIBLE_BECOME_USER}",
                             colorized: true,
-                            limit: 'vtc-gkhcontent',
+                            limit: 'some-group',
                             inventory: 'inventories/main',
                             playbook: 'playbooks/what_play.yml')
                     }
