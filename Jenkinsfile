@@ -283,6 +283,7 @@ pipeline {
             }
             steps {
                 echo "plug"
+            }
         }
 
         //12
@@ -302,6 +303,7 @@ pipeline {
             }
             steps {
                 echo "plug"
+            }
         }
 
         //14
@@ -311,6 +313,7 @@ pipeline {
             }
             steps {
                 echo "plug"
+            }
         }
 
         // stage('mail.dom.test.gosuslugi.ru(deleted)') {
@@ -341,7 +344,7 @@ pipeline {
             }
         }
     }
-}
+    
     post {
         success {
             echo "0"
@@ -357,9 +360,6 @@ pipeline {
         }
     }
 }
-}
-}
-
 //     stage('Git checkout on master') {
 //     agent {label 'master'}
 //         steps {
