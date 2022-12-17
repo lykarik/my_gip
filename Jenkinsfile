@@ -91,8 +91,8 @@ pipeline {
                                 //         reference: "/var/lib/jenkins/workspace/_git/my_gip.git", 
                                 //         shallow: true, 
                                 //         depth: "1"],
-                                //     [$class: 'RelativeTargetDirectory', 
-                                //         relativeTargetDir: "my_gip.git"],
+                                    [$class: 'RelativeTargetDirectory', 
+                                    relativeTargetDir: "my_gip_${BRANCH_NAME}"]
                                 ]
                             ])
                 }
