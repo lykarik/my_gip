@@ -197,7 +197,7 @@ pipeline {
                       inventory: [$class: 'InventoryPath', path: "./inventories/main/hosts"],
                       hostPattern: 'jenkins-slave01:jenkins-slave02',
                       module: 'copy',
-                      additionalParameters: 'src=../_git/take_me.* dest=~/ owner=root group=wheel mode=644',
+                      additionalParameters: 'src=../_git/take_me.please dest=~/ owner=root group=wheel mode=644',
                       //becomeUser: "${ANSIBLE_BECOME_USER}",
                       //module: 'copy',
                       //command: 'src=../files/pki_files/certs/rsa_vtc.dom.test.gosuslugi.ru-letsencrypt.crt dest=/etc/pki/common/certs/ owner=root group=nginx mode=644',
