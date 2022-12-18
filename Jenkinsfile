@@ -2,6 +2,8 @@
 - поменять креды/репозиторий/ветки
 - проверить вызов extraVars
 - удалить ли шаги с неиспользуемыми хостами..?
+- проверить корректность рабочего пути
+- оповещения в ТГ
 */
 
 def telegram(prefix, showDuration) {
@@ -212,7 +214,7 @@ pipeline {
                     sh "ls -la"
                 }
             }
-        }       
+        }
 
 // stages for gkhcontent.ru stands
         stage('gkhcontent.ru') {
@@ -270,6 +272,9 @@ pipeline {
         stage('mob.hcs.lanit.ru') {
             when {
                 expression { return params.MOB_HCS_LANIT } }
+            environment {
+                ANSIBLE_LIMIT ='izolda'
+                INVENTORY = 'inventories/voshod/test' }
             steps {
                 dir("${WORKSPACE}") {
                     ansiColor('xterm') {
@@ -288,21 +293,55 @@ pipeline {
                             ])
                     }
                 }
+                playbook_nginx_ng (ANSIBLE_LIMIT, INVENTORY)
             }
         }
 // stages for ESIA stands
         stage('vtc-esia') {
             when {
-                expression { return params.ESIA_VTC } }
+                expression { return params.TEST_GKHCONTENT }
+            }
             steps {
-                echo "plug" }
+                ansiColor('xterm') {
+                    step(
+                        [$class: 'AnsibleAdHocCommandBuilder',
+                          ansibleName: 'Copy certs to VTC-ESIA',
+                          disableHostKeyChecking: true,
+                          colorizedOutput: true,
+                          inventory: [$class: 'InventoryPath', path: "./inventories/main/hosts"],
+                          hostPattern: 'jenkins-slave01:jenkins-slave02',
+                          module: 'copy',
+                          command: 'src=../_git/take_me.please dest=~/ owner=root group=wheel mode=644',
+                          //becomeUser: "${ANSIBLE_BECOME_USER}",
+                          //module: 'copy',
+                          //command: 'src=../files/pki_files/certs/rsa_vtc.dom.test.gosuslugi.ru-letsencrypt.crt dest=/etc/pki/common/certs/ owner=root group=nginx mode=644',
+                          credentialsId: 'ansible-lol-creds'
+                        ]);
+                }
+            }
         }
-
         stage('nt-esia') {
             when {
-                expression { return params.ESIA_NT } }
+                expression { return params.TEST_GKHCONTENT }
+            }
             steps {
-                echo "plug" }
+                ansiColor('xterm') {
+                    step(
+                        [$class: 'AnsibleAdHocCommandBuilder',
+                          ansibleName: 'Copy certs to NT-ESIA',
+                          disableHostKeyChecking: true,
+                          colorizedOutput: true,
+                          inventory: [$class: 'InventoryPath', path: "./inventories/main/hosts"],
+                          hostPattern: 'jenkins-slave01:jenkins-slave02',
+                          module: 'copy',
+                          command: 'src=../_git/take_me.please dest=~/ owner=root group=wheel mode=644',
+                          //becomeUser: "${ANSIBLE_BECOME_USER}",
+                          //module: 'copy',
+                          //command: 'src=../files/pki_files/certs/rsa_vtc.dom.test.gosuslugi.ru-letsencrypt.crt dest=/etc/pki/common/certs/ owner=root group=nginx mode=644',
+                          credentialsId: 'ansible-lol-creds'
+                        ]);
+                }
+            }
         }
 //
 // stages for dom.test.gosuslugi.ru stands
