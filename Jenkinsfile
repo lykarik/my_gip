@@ -1,14 +1,13 @@
 node ("node01"){
 
-    stage ('Get source code') {
-        stage('Git checkout for Jenkinsfile') {
-            steps {
-                git branch: 'main', 
-                    changelog: false, 
-                    credentialsId: 'jenkins-master-git-key', 
-                    url: 'git@github.com:lykarik/my_gip.git'
-            }	
-        }
+
+    stage('Git checkout for Jenkinsfile') {
+        steps {
+            git branch: 'main', 
+                changelog: false, 
+                credentialsId: 'jenkins-master-git-key', 
+                url: 'git@github.com:lykarik/my_gip.git'
+        }	
     }
 
     stage ('Preparation') {
