@@ -1,7 +1,14 @@
-node ("node02"){
+node ("node01"){
 
     stage ('Get source code') {
-        git branch: "main" url: 'https://github.com/lykarik/my_gip.git'
+        stage('Git checkout for Jenkinsfile') {
+            steps {
+                git branch: 'main', 
+                    changelog: false, 
+                    credentialsId: 'jenkins-master-git-key', 
+                    url: 'git@github.com:lykarik/my_gip.git'
+            }	
+        }
     }
 
     stage ('Preparation') {
