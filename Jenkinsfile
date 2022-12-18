@@ -129,6 +129,7 @@ pipeline {
         string(name: 'ANSIBLE_BECOME_USER',             defaultValue: '', description: 'Enter username for Ansible BECOME')             
 
         booleanParam(name: 'NIT',                       defaultValue: false, description: 'nit.dom.test.gosuslugi.ru(deleted)')
+        booleanParam(name: 'NIT_API',                   defaultValue: false, description: 'api.nit.dom.test.gosuslugi.ru(deleted)')
         booleanParam(name: 'MAIL',                      defaultValue: false, description: 'mail.dom.test.gosuslugi.ru(deleted)')
 
     }
@@ -176,7 +177,7 @@ pipeline {
                 }
             }
         }
-        //1
+
         stage('gkhcontent.ru') {
             when {
                 expression { return params.GKHCONTENT } }
@@ -186,7 +187,7 @@ pipeline {
             steps {
                 playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT, INVENTORY) }
         }
-        //2
+
         stage('test.gkhcontent.ru') {
             when {
                 expression { return params.TEST_GKHCONTENT } }
@@ -197,87 +198,90 @@ pipeline {
             steps {
                 playbook_init (ANSIBLE_LIMIT, INVENTORY, PLAYBOOK) }
         }
-        //3
+
         stage('vtc.dom.test.gosuslugi.ru') {
             when {
-                expression { return params.VTC }
-            }
+                expression { return params.VTC } }
+            environment {
+                ANSIBLE_LIMIT ='idp01'
+                INVENTORY = 'inventories/voshod/test' }
             steps {
-                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
-            }
+                playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT, INVENTORY) }
         }
 
-        //4
         stage('sit0[1-2].dom.test.gosuslugi.ru') {
             when {
-                expression { return params.SIT }
-            }
+                expression { return params.SIT } }
+            environment {
+                ANSIBLE_LIMIT_PKI ='sit01:sit01u:sit02u'
+                ANSIBLE_LIMIT_RSA ='sit-gs'
+                INVENTORY = 'inventories/voshod/test' }
             steps {
-                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
-            }
+                playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT_PKI, INVENTORY)
+                playbook_nginx_ng_rsa (ANSIBLE_LIMIT_RSA, INVENTORY) }
         }
 
-        //5
         stage('ssp.dom.test.gosuslugi.ru') {
             when {
-                expression { return params.SSP }
-            }
+                expression { return params.SSP } }
+            environment {
+                ANSIBLE_LIMIT ='ssp-http-my'
+                INVENTORY = 'inventories/voshod/test' }
             steps {
-                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
-            }
+                playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT, INVENTORY) }
         }
 
-        //6
         stage('nt01.dom.test.gosuslugi.ru') {
             when {
-                expression { return params.NT01 }
-            }
+                expression { return params.NT01 } }
+            environment {
+                ANSIBLE_LIMIT_MY ='nt-http-my'
+                ANSIBLE_LIMIT_LK ='nt-http-lk'
+                INVENTORY = 'inventories/voshod/test' }
             steps {
-                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
-            }
+                playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT_MY, INVENTORY)
+                playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT_LK, INVENTORY) }
         }
 
-        //7
         stage('kpak.dom.test.gosuslugi.ru') {
             when {
-                expression { return params.KPAK }
-            }
+                expression { return params.KPAK } }
+            environment {
+                ANSIBLE_LIMIT ='kpak-http-my:kpak-http-api'
+                INVENTORY = 'inventories/voshod/test' }
             steps {
-                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
-            }
+                playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT, INVENTORY) }
         }
 
-        //8
         stage('ft01.dom.test.gosuslugi.ru') {
             when {
-                expression { return params.FT01 }
-            }
+                expression { return params.FT01 } }
+            environment {
+                ANSIBLE_LIMIT ='ft-http-my'
+                INVENTORY = 'inventories/voshod/test' }
             steps {
-                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
-            }
+                playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT, INVENTORY) }
         }
 
-        //9
-        stage('sreda.vtc.dom.test.gosuslugi.ru') {
+        stage('sreda.vtc.dom.test.gosuslugi.ru-sreda.ft01.dom.test.gosuslugi.ru') {
             when {
-                expression { return params.SREDA_VTC }
-            }
+                expression { return params.SREDA_VTC } }
+            environment {
+                ANSIBLE_LIMIT ='tgs-http'
+                INVENTORY = 'inventories/voshod/test' }
             steps {
-                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
-            }
+                playbook_pki_letsencrypt_nginx (ansible_limit, inventory) }
         }
 
-        //10
-        stage('sreda.ft01.dom.test.gosuslugi.ru') {
-            when {
-                expression { return params.SREDA_FT01 }
-            }
-            steps {
-                playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
-            }
-        }
+        //stage('sreda.ft01.dom.test.gosuslugi.ru') {
+        //    when {
+        //        expression { return params.SREDA_FT01 }
+        //    }
+        //    steps {
+        //        playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
+        //    }
+        //}
 
-        //11
         stage('Update certs mail.dom.test.gosuslugi.ru') {
             when {
                 expression { return params.UPDATE_CERTS_MAIL }
@@ -287,7 +291,6 @@ pipeline {
             }
         }
 
-        //12
         stage('mob.hcs.lanit.ru') {
             when {
                 expression { return params.MOB_HCS_LANIT }
@@ -297,7 +300,6 @@ pipeline {
             }
         }
 
-        //13
         stage('vtc-esia') {
             when {
                 expression { return params.ESIA_VTC }
@@ -307,7 +309,6 @@ pipeline {
             }
         }
 
-        //14
         stage('nt-esia') {
             when {
                 expression { return params.ESIA_NT }
@@ -317,19 +318,34 @@ pipeline {
             }
         }
 
-        // stage('mail.dom.test.gosuslugi.ru(deleted)') {
+        // stage('nit.dom.test.gosuslugi.ru(DELETED)') {
         //     when {
-        //         expression { return params.MAIL }
-        //     }
-        //    steps {
-        //       playbook_pki_letsencrypt_nginx (ansible_limit, inventory)
+        //         expression { return params.NIT } }
+        //     environment {
+        //         ANSIBLE_LIMIT ='nit-http-my'
+        //         INVENTORY = 'inventories/voshod/test' }
+        //     steps {
+        //         playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT, INVENTORY) }
         // }
 
-        // stage('nit.dom.test.gosuslugi.ru(deleted)') {
+        // stage('api.nit.dom.test.gosuslugi.ru(DELETED)') {
         //     when {
-        //         expression { return params.NIT }
-        //     }
+        //         expression { return params.NIT_API } }
+        //     environment {
+        //         ANSIBLE_LIMIT ='nit-http-api'
+        //         INVENTORY = 'inventories/voshod/test' }
         //     steps {
+        //         playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT, INVENTORY) }
+        // }
+
+        // stage('mail.dom.test.gosuslugi.ru(NOT NEED UPDATE)') {
+        //     when {
+        //         expression { return params.MAIL } }
+        //     environment {
+        //         ANSIBLE_LIMIT ='vtc-mail'
+        //         INVENTORY = 'inventories/voshod/test' }
+        //     steps {
+        //         playbook_pki_letsencrypt_nginx (ANSIBLE_LIMIT, INVENTORY) }
         // }
 
         stage('plug stage') {
@@ -361,28 +377,3 @@ pipeline {
         }
     }
 }
-//     stage('Git checkout on master') {
-//     agent {label 'master'}
-//         steps {
-//             dir("${WS_MASTER}") {
-//                 checkout([$class: 'GitSCM',
-//                         branches: [[name: ""]],
-//                         doGenerateSubmoduleConfigurations: false,
-//                         extensions: [
-//                             [$class: 'SubmoduleOption', shallow: true, depth: "1", parentCredentials: true],
-//                             [$class: 'GitLFSPull'],
-//                             [$class: 'CloneOption', reference: "", shallow: true, depth: "1"],
-//                             [$class: 'RelativeTargetDirectory', relativeTargetDir: ""],
-//                         ],
-//                         gitTool: 'Default',
-//                         submoduleCfg: [],
-//                         userRemoteConfigs: [[url: '', credentialsId: '']]
-//                     ])
-//             }
-//         }
-//     }
-
-
-//        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
-//        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
-//        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
