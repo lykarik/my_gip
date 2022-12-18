@@ -193,12 +193,13 @@ pipeline {
                 step(
                     [$class: 'AnsibleAdHocCommandBuilder',
                       ansibleName: 'Copy certs to ESIA',
-                      inventory: [$class: 'InventoryPath', path: "./inventories/main/hosts"],
-                      hostPattern: 'some-group',
-                      module: 'shell',
                       disableHostKeyChecking: true,
-                      command: 'ls',
-                      forks: 1,
+                      inventory: [$class: 'InventoryPath', path: "./inventories/main/hosts"],
+                      hostPattern: 'jenkins-slave01:jenkins-slave02',
+                      module: 'ping',
+                      //becomeUser: "${ANSIBLE_BECOME_USER}",
+                      //module: 'copy',
+                      //command: 'src=../files/pki_files/certs/rsa_vtc.dom.test.gosuslugi.ru-letsencrypt.crt dest=/etc/pki/common/certs/ owner=root group=nginx mode=644',
                       credentialsId: 'ansible-lol-creds'
                     ]);
                 echo "test.gkhcontent.ru"
