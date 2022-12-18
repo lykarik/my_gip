@@ -8,7 +8,7 @@ pipeline {
 			steps {
 				git branch: 'main', 
 					changelog: false, 
-					credentialsId: 'jenkins-master-git-key', 
+					credentialsId: 'jenkins-slave01-git', 
 					url: 'git@github.com:lykarik/my_gip.git'
 			}	
 		}
