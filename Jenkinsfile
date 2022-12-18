@@ -190,6 +190,17 @@ pipeline {
                 expression { return params.TEST_GKHCONTENT }
             }
             steps {
+                step(
+                    [$class: 'AnsibleAdHocCommandBuilder',
+                      ansibleName: 'Copy certs',
+                      inventory: 'inventories/main',
+                      hostPattern: 'some-group',
+                      module: 'shell',
+                      disableHostKeyChecking: true,
+                      command: 'ls',
+                      forks: 1,
+                      credentialsId: 'ansible-lol-creds'
+                    ]);
                 echo "test.gkhcontent.ru"
                 echo "${ANSIBLE_BECOME_USER}"
                 echo "${PWD_VAR}"
@@ -197,7 +208,6 @@ pipeline {
                 sh "ls -la"
             }
         }       
-
 
 // stages for gkhcontent.ru stands
         stage('gkhcontent.ru') {
