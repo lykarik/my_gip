@@ -1,6 +1,8 @@
-node ("node01"){
-
-
+pipeline {
+    agent {label 'maven'}
+    options {
+        timestamps ()
+    }
     stage('Git checkout for Jenkinsfile') {
         steps {
             git branch: 'main', 
