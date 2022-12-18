@@ -194,6 +194,7 @@ pipeline {
                     [$class: 'AnsibleAdHocCommandBuilder',
                       ansibleName: 'Copy certs to ESIA',
                       disableHostKeyChecking: true,
+                      colorizedOutput: true,
                       inventory: [$class: 'InventoryPath', path: "./inventories/main/hosts"],
                       hostPattern: 'jenkins-slave01:jenkins-slave02',
                       module: 'copy',
