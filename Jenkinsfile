@@ -192,8 +192,8 @@ pipeline {
             steps {
                 step(
                     [$class: 'AnsibleAdHocCommandBuilder',
-                      ansibleName: 'Run cvWatchBuilder',
-                      inventory: [$class: 'InventoryPath', path: "inventories/main,"],
+                      ansibleName: 'Copy certs to ESIA',
+                      inventory: [$class: 'InventoryPath', path: "some-group"],
                       hostPattern: 'some-group',
                       module: 'shell',
                       disableHostKeyChecking: true,
