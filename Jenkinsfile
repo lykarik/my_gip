@@ -153,7 +153,7 @@ pipeline {
                 git branch: 'update_certs_try', 
                     changelog: false, 
                     credentialsId: 'jenkins-master-git-key', 
-                    url: '${REPO}/${PROJECT}.git'
+                    url: "${REPO}/${PROJECT}.git"
             }
         }
         stage('Git checkout main branch') {
