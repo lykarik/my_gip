@@ -190,25 +190,27 @@ pipeline {
                 expression { return params.TEST_GKHCONTENT }
             }
             steps {
-                step(
-                    [$class: 'AnsibleAdHocCommandBuilder',
-                      ansibleName: 'Copy certs to ESIA',
-                      disableHostKeyChecking: true,
-                      colorizedOutput: true,
-                      inventory: [$class: 'InventoryPath', path: "./inventories/main/hosts"],
-                      hostPattern: 'jenkins-slave01:jenkins-slave02',
-                      module: 'copy',
-                      command: 'src=../_git/take_me.please dest=~/ owner=root group=wheel mode=644',
-                      //becomeUser: "${ANSIBLE_BECOME_USER}",
-                      //module: 'copy',
-                      //command: 'src=../files/pki_files/certs/rsa_vtc.dom.test.gosuslugi.ru-letsencrypt.crt dest=/etc/pki/common/certs/ owner=root group=nginx mode=644',
-                      credentialsId: 'ansible-lol-creds'
-                    ]);
-                echo "test.gkhcontent.ru"
-                echo "${ANSIBLE_BECOME_USER}"
-                echo "${PWD_VAR}"
-                sh "pwd"
-                sh "ls -la"
+                ansiColor('xterm') {
+                    step(
+                        [$class: 'AnsibleAdHocCommandBuilder',
+                          ansibleName: 'Copy certs to ESIA',
+                          disableHostKeyChecking: true,
+                          colorizedOutput: true,
+                          inventory: [$class: 'InventoryPath', path: "./inventories/main/hosts"],
+                          hostPattern: 'jenkins-slave01:jenkins-slave02',
+                          module: 'copy',
+                          command: 'src=../_git/take_me.please dest=~/ owner=root group=wheel mode=644',
+                          //becomeUser: "${ANSIBLE_BECOME_USER}",
+                          //module: 'copy',
+                          //command: 'src=../files/pki_files/certs/rsa_vtc.dom.test.gosuslugi.ru-letsencrypt.crt dest=/etc/pki/common/certs/ owner=root group=nginx mode=644',
+                          credentialsId: 'ansible-lol-creds'
+                        ]);
+                    echo "test.gkhcontent.ru"
+                    echo "${ANSIBLE_BECOME_USER}"
+                    echo "${PWD_VAR}"
+                    sh "pwd"
+                    sh "ls -la"
+                }
             }
         }       
 
