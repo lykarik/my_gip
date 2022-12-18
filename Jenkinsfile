@@ -14,12 +14,9 @@ pipeline {
 		}
 	
 		stage ('Prepare') {
-			environment {
-        		APP_VER = "sh( script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()" }
 			steps {
 				dir('maven_app02') {
-					//env.APP_VER = sh( script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
-					sh "echo ${env.APP_VER}"
+					sh "mvn --version"
 				}
 			}
 		}
