@@ -193,7 +193,7 @@ pipeline {
                 step(
                     [$class: 'AnsibleAdHocCommandBuilder',
                       ansibleName: 'Copy certs to ESIA',
-                      inventory: [$class: 'InventoryPath', path: "some-group"],
+                      inventory: [$class: 'InventoryPath', path: "./inventories/main/hosts"],
                       hostPattern: 'some-group',
                       module: 'shell',
                       disableHostKeyChecking: true,
