@@ -44,7 +44,7 @@ pipeline {
                 expression { return params.DEPLOY } }
 			steps {
 				dir('maven_app02') {
-					deploy adapters: [tomcat9(credentialsId: 'tomcat-creds', path: "${WORKSPACE}", url: 'http://192.168.98.239:8080/')], contextPath: null, war: '**/*.war'
+					deploy adapters: [tomcat9(credentialsId: 'tomcat-creds', path: '/opt/tomcat/latest/webapps', url: 'http://192.168.98.239:8080/')], contextPath: null, war: '**/*.war'
 				}
 			}
 		}
