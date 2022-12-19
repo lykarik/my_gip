@@ -44,7 +44,9 @@ pipeline {
                 expression { return params.DEPLOY } }
 			steps {
 				dir('maven_app02') {
-					deploy adapters: [tomcat9(credentialsId: 'tomcat-creds', path: '/opt/tomcat/latest/webapps', url: 'http://192.168.98.239:8080')], contextPath: null, war: '**/*.war'
+					sshagent(['tomcat-deployer-key']) {
+						scp /home/jenkins/workspace/maven_app/maven_app02/target/java-hello-world.war root@192.168.98.239:/opt/tomcat/latest/webapps
+					}
 				}
 			}
 		}
