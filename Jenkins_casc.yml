@@ -1,0 +1,26 @@
+jenkins:
+  systemMessage: "Jenkins configured automatically by Jenkins Configuration as Code plugin\n\n"
+tool:
+  git:
+    installations:
+      - name: git
+        home: /usr/local/bin/git
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - basicSSHUserPrivateKey:
+              scope: SYSTEM
+              id: ssh-key-sample
+              username: admin
+              passphrase: ${SSH_KEY_PASSWORD}
+              description: "ssh-key-sample"
+              privateKeySource:
+                directEntry:
+                  privateKey: ${SSH_PRIVATE_KEY}
+          - usernamePassword:
+              description: "ansible-creds"
+              id: "ansible-creds"
+              password: "hshshshsh"
+              scope: GLOBAL
+              username: "jenkins"
