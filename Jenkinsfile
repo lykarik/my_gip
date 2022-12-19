@@ -44,7 +44,7 @@ pipeline {
                 expression { return params.DEPLOY } }
 			steps {
 				dir('maven_app02') {
-					withCredentials([usernamePassword(credentialsId: 'tomcat-creds', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
+					withCredentials([usernamePassword(credentialsId: 'ansible-lol-creds', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
 						sh "scp -o StrictHostKeyChecking=no /home/jenkins/workspace/maven_app/maven_app02/target/java-hello-world.war ${USER}@192.168.98.239:/opt/tomcat/latest/webapps"
 					}
 				}
