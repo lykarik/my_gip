@@ -1,3 +1,6 @@
+parameters {
+        booleanParam(name: 'DEPLOY', defaultValue: false, description: 'Need deploy?') }
+
 pipeline {
     agent {label 'maven'}
     options {
@@ -38,11 +41,15 @@ pipeline {
 		}
 	
 		stage ('Deploy') {
+			when {
+                expression { return params.DEPLOY } }
 			steps {
 				dir('maven_app02') {
-					echo "Here will be deploy"
+						deploy adapters: [tomcat9(credentialsId: 'tomcat-creds', path: "${WORKSPACE}", url: 'http://192.168.98.239:8080/')], contextPath: null, war: '**/*.war'
+					}
 				}
 			}
 		}
 	}
 }
+
