@@ -1,11 +1,10 @@
-parameters {
-        booleanParam(name: 'DEPLOY', defaultValue: false, description: 'Need deploy?') }
-
 pipeline {
     agent {label 'maven'}
     options {
         timestamps ()
     }
+	parameters {
+        booleanParam(name: 'DEPLOY', defaultValue: false, description: 'Need deploy?') }
 	stages {
 		stage('Git checkout for Jenkinsfile') {
 			steps {
