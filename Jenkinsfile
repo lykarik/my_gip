@@ -45,7 +45,7 @@ pipeline {
 			steps {
 				dir('maven_app02') {
 					sshagent(['tomcat-deployer-key']) {
-						scp /home/jenkins/workspace/maven_app/maven_app02/target/java-hello-world.war root@192.168.98.239:/opt/tomcat/latest/webapps
+						sh "scp /home/jenkins/workspace/maven_app/maven_app02/target/java-hello-world.war root@192.168.98.239:/opt/tomcat/latest/webapps"
 					}
 				}
 			}
